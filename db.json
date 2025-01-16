@@ -1,7 +1,90 @@
 {
-  "example": [
-    { "id": 1, "name": "Item One" },
-    { "id": 2, "name": "Item Two" },
-    { "id": 3, "name": "Item Three" }
+  "users": [
+    {
+      "id": 1,
+      "username": "john_doe",
+      "password": "password123",
+      "name": "John Doe"
+    },
+    {
+      "id": 2,
+      "username": "jane_smith",
+      "password": "password456",
+      "name": "Jane Smith"
+    }
+  ],
+  "policies": [
+    {
+      "id": 1,
+      "userId": 1,
+      "type": "Health",
+      "status": "active",
+      "details": "Health insurance covering basic medical needs.",
+      "startDate": "2023-01-01",
+      "endDate": "2024-01-01",
+      "coverageDetails": "Includes hospitalization, outpatient services, and emergency care.",
+      "premiumAmount": 500,
+      "documentUrl": "documents/policy1.pdf"
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "type": "Auto",
+      "status": "pending",
+      "details": "Auto insurance for personal vehicle.",
+      "startDate": "2023-06-15",
+      "endDate": "2024-06-15",
+      "coverageDetails": "Covers collision, theft, and liability.",
+      "premiumAmount": 300,
+      "documentUrl": "documents/policy2.pdf"
+    },
+    {
+      "id": 3,
+      "userId": 2,
+      "type": "Home",
+      "status": "expired",
+      "details": "Home insurance covering property and belongings.",
+      "startDate": "2022-03-10",
+      "endDate": "2023-03-10",
+      "coverageDetails": "Protects against fire, theft, and natural disasters.",
+      "premiumAmount": 400,
+      "documentUrl": "documents/policy3.pdf"
+    },
+    {
+      "id": 4,
+      "userId": 1,
+      "type": "Health",
+      "status": "active",
+      "details": "Premium health insurance with extended coverage.",
+      "startDate": "2023-02-01",
+      "endDate": "2024-02-01",
+      "coverageDetails": "Includes dental, vision, and specialist consultations.",
+      "premiumAmount": 800,
+      "documentUrl": "documents/policy4.pdf"
+    },
+    {
+      "id": 5,
+      "userId": 2,
+      "type": "Auto",
+      "status": "active",
+      "details": "Comprehensive auto insurance.",
+      "startDate": "2023-04-20",
+      "endDate": "2024-04-20",
+      "coverageDetails": "Full coverage including roadside assistance.",
+      "premiumAmount": 450,
+      "documentUrl": "documents/policy5.pdf"
+    }
+  ],
+  "claims": [
+    {
+      "id": 1,
+      "userId": 1,
+      "policyId": 1,
+      "claimType": "Medical",
+      "description": "Hospitalization due to surgery.",
+      "files": ["uploads/claim1/image1.jpg", "uploads/claim1/document1.pdf"],
+      "status": "submitted",
+      "submittedAt": "2023-07-10T10:30:00Z"
+    }
   ]
 }

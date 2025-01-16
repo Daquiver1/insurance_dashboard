@@ -1,10 +1,16 @@
+// src/app/store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import exampleReducer from "./slices/exampleSlice";
+import authReducer from "./slices/authSlice";
+import policiesReducer from "./slices/policiesSlice";
+import claimsReducer from "./slices/claimsSlice";
 
 const store = configureStore({
   reducer: {
     example: exampleReducer,
-    // Add other reducers here
+    auth: authReducer,
+    policies: policiesReducer,
+    claims: claimsReducer,
   },
 });
 
