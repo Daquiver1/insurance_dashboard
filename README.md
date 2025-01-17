@@ -11,57 +11,54 @@ A Claims Management System built with React and Tailwind CSS. This dashboard-bas
   - [Installation](#installation)
   - [Running the Application](#running-the-application)
 - [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
-- **User Authentication:** Secure login and registration system.
-- **Claims Submission:** Users can submit various types of claims with detailed information and attachments.
-- **Real-time Status Tracking:** Monitor the progress of claims through different stages.
-- **Detailed History:** View comprehensive history of all remarks, statuses, and actions taken on each claim.
-- **Responsive Design:** Optimized for all devices ensuring a seamless user experience.
-- **State Management:** Efficient state handling using Redux Toolkit.
-- **Testing:** Comprehensive testing setup with Jest and React Testing Library.
-
+- **User Authentication**
+- **Claims Submission**
+- **Real-time Claim Status Tracking**
+- **Detailed Claim History**
+- **Responsive Design**
+- **State Management**
+- **Testing**
 
 ## Design Choices
 
 ### 1. **Component-Based Architecture**
 
-Adopting a modular component-based structure promotes reusability and maintainability. By segregating components into domain-specific directories (e.g., `claims`, `policies`), the codebase remains organized and scalable.
+The app is organized into smaller, reusable parts called components. For example, components related to `claims` and `policies` are kept in separate folders. This makes the code easier to maintain and reuse in the future.
 
 ### 2. **State Management with Redux Toolkit**
 
-Utilizing Redux Toolkit simplifies state management with less boilerplate. The `slices` approach allows for logical grouping of state and reducers, making the state predictable and easier to debug.
+Redux Toolkit helps manage data (state) in the app without writing too much extra code. Using `slices` keeps related data and functions together, making it easier to track and debug how the data changes.
 
 ### 3. **TypeScript for Type Safety**
 
-Integrating TypeScript enhances code reliability by catching type-related errors during development. The `types/` directory centralizes all type definitions, ensuring consistency across the application.
+TypeScript ensures that variables, functions, and components are used correctly by checking for errors during development. All the app’s types are stored in one folder `(types/)` to keep things consistent and organized.
 
 ### 4. **Tailwind CSS for Styling**
 
-Tailwind CSS offers a utility-first approach, enabling rapid and consistent styling directly within component classes. This reduces the need for writing extensive custom CSS and promotes a cohesive design language.
+Tailwind CSS lets you add styles quickly using predefined classes directly in your components. It reduces the need to write custom CSS and keeps the design consistent throughout the app.
 
 ### 5. **Responsive Design Principles**
 
-Ensuring the application is fully responsive guarantees a seamless user experience across various devices and screen sizes. This is achieved through Tailwind's responsive utilities and thoughtful component design.
+The app is designed to work well on different screen sizes. Tailwind's responsive features and component design make this possible.
 
 ### 6. **Routing with React Router**
 
-Managing navigation with React Router provides a declarative and dynamic approach to handling multiple views within the application. The `routes/` directory encapsulates all routing logic, keeping it centralized and easy to manage.
+React Router handles navigation in the app, making it easy to move between pages or views. All the routing logic is stored in one folder (routes/) to keep it organized.
 
 ### 7. **Testing with Jest and React Testing Library**
 
-Incorporating Jest alongside React Testing Library facilitates robust testing practices. This ensures components behave as expected and helps prevent regressions during development.
+Jest and React Testing Library are used to test the app. 
 
 ### 8. **Mock API with JSON Server**
 
-Using `db.json` with JSON Server allows for rapid prototyping and testing without a fully developed backend. This enables frontend development to proceed in parallel with backend API development.
+The project uses a simple file `(db.json)` to act like a backend.
 
 ### 9. **Utility Functions**
 
-The `utils/helpers.ts` file houses common utility functions, promoting DRY (Don't Repeat Yourself) principles and simplifying complex logic within components.
+Common functions used in multiple places are kept in one file `(utils/helpers.ts)`. This avoids repeating the same code and makes the app easier to manage.
 
 ## Getting Started
 
@@ -69,16 +66,16 @@ Follow these instructions to set up and run the project locally.
 
 ### Prerequisites
 
-- **Node.js** (v14 or higher)
-- **npm** (v6 or higher) or **yarn**
+- **Node.js** (v16+)
+- **npm** (v10+)
 
 ### Installation
 
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/your-username/claims-management-system.git
-   cd claims-management-system
+   git clone https://github.com/daquiver1/insurance_dashboard.git
+   cd insurance-dashboard
    ```
 
 2. **Install Dependencies**
@@ -89,28 +86,12 @@ Follow these instructions to set up and run the project locally.
    npm install
    ```
 
-   Or using yarn:
-
-   ```bash
-   yarn install
-   ```
-
 ### Running the Application
 
 1. **Start the Mock API Server**
 
-   The project uses JSON Server to simulate backend APIs.
-
-   Using npm:
-
    ```bash
    npm run server
-   ```
-
-   Or using yarn:
-
-   ```bash
-   yarn server
    ```
 
    This will start the JSON Server at `http://localhost:3001`.
@@ -119,16 +100,8 @@ Follow these instructions to set up and run the project locally.
 
    In a separate terminal window/tab:
 
-   Using npm:
-
    ```bash
    npm start
-   ```
-
-   Or using yarn:
-
-   ```bash
-   yarn start
    ```
 
    This will launch the application in your default browser at `http://localhost:3000`.
@@ -143,54 +116,14 @@ Follow these instructions to set up and run the project locally.
    npm test
    ```
 
-   Or using yarn:
-
-   ```bash
-   yarn test
-   ```
-
 ## Technologies Used
 
-- **React**: Frontend library for building user interfaces.
-- **TypeScript**: Superset of JavaScript for static typing.
-- **Tailwind CSS**: Utility-first CSS framework for rapid UI development.
-- **Redux Toolkit**: Simplifies Redux state management.
-- **React Router**: Declarative routing for React applications.
-- **JSON Server**: Mock REST API for development and testing.
-- **Jest**: JavaScript testing framework.
-- **React Testing Library**: Testing utilities for React components.
-- **Heroicons & Lucide-React**: Icon libraries for enhancing UI.
-
-## Contributing
-
-Contributions are welcome! Please follow these steps to contribute:
-
-1. **Fork the Repository**
-
-2. **Create a Feature Branch**
-
-   ```bash
-   git checkout -b feature/YourFeatureName
-   ```
-
-3. **Commit Your Changes**
-****
-   ```bash
-   git commit -m "Add your message here"
-   ```
-
-4. **Push to the Branch**
-
-   ```bash
-   git push origin feature/YourFeatureName
-   ```
-
-5. **Open a Pull Request**
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-*Feel free to customize this README further to better fit the specifics and nuances of your project.*
+- **React**
+- **TypeScript**
+- **Tailwind CSS**
+- **Redux Toolkit**
+- **React Router**
+- **JSON Server**
+- **Jest**
+- **React Testing Library**
+- **Lucide-React**
