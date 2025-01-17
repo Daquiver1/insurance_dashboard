@@ -1,29 +1,12 @@
 // src/app/slices/claimsSlice.ts
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import api from "../../api/api";
+import { Claim, ClaimsState, ClaimStatus } from "../../types";
 import { RootState } from "../store";
-
-export type ClaimStatus = "submitted" | "approved" | "rejected";
-
-export interface Claim {
-  id: number;
-  userId: number;
-  policyId: number;
-  claimType: string;
-  description: string;
-  files: string[];
-  status: ClaimStatus;
-  submittedAt: string;
-}
-
-interface ClaimsState {
-  claims: Claim[];
-  status: "idle" | "loading" | "succeeded" | "failed";
-  error: string | null;
-}
 
 const initialState: ClaimsState = {
   claims: [],
+  currentClaim: null,
   status: "idle",
   error: null,
 };
@@ -31,10 +14,10 @@ const initialState: ClaimsState = {
 // Submit a new claim
 export const submitClaim = createAsyncThunk<
   Claim,
-  Omit<Claim, "id" | "status" | "submittedAt">,
+  Omit<Claim, "id" | "status" | "submittedAt" | "history">,
   { state: RootState; rejectValue: string }
 >("claims/submitClaim", async (claimData, { getState, rejectWithValue }) => {
-  const { auth } = getState();
+const { auth } = getState();
   if (!auth.user) {
     return rejectWithValue("User not authenticated");
   }
@@ -44,6 +27,13 @@ export const submitClaim = createAsyncThunk<
       ...claimData,
       status: "submitted",
       submittedAt: new Date().toISOString(),
+      history: [
+        {
+          stage: "Submitted",
+          date: new Date().toISOString(),
+          remarks: "Claim submitted by user.",
+        },
+      ],
     };
     const response = await api.post<Claim>("/claims", newClaim);
     return response.data;
@@ -71,11 +61,56 @@ export const fetchClaims = createAsyncThunk<
   }
 });
 
+// Fetch a single claim by ID
+export const fetchClaimById = createAsyncThunk<
+  Claim,
+  number,
+  { state: RootState; rejectValue: string }
+>("claims/fetchClaimById", async (claimId, { getState, rejectWithValue }) => {
+  const { auth } = getState();
+  if (!auth.user) {
+    return rejectWithValue("User not authenticated");
+  }
+
+  try {
+    const response = await api.get<Claim>(`/claims/${claimId}`);
+    if (response.data.userId !== auth.user.id) {
+      return rejectWithValue("Access denied");
+    }
+    return response.data;
+  } catch (error) {
+    return rejectWithValue("Failed to fetch claim details");
+  }
+});
+
 const claimsSlice = createSlice({
   name: "claims",
   initialState,
   reducers: {
-    // Define synchronous actions here if needed
+    clearCurrentClaim(state) {
+      state.currentClaim = null;
+      state.error = null;
+      state.status = "idle";
+    },
+    updateClaimStatus(
+      state,
+      action: PayloadAction<{
+        claimId: number;
+        newStatus: ClaimStatus;
+        remarks: string;
+      }>
+    ) {
+      const { claimId, newStatus, remarks } = action.payload;
+      const claim = state.claims.find((c) => c.id === claimId);
+      if (claim) {
+        claim.status = newStatus;
+        claim.history.push({
+          stage: newStatus.replace("_", " ").toUpperCase(),
+          date: new Date().toISOString(),
+          remarks,
+        });
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -107,9 +142,28 @@ const claimsSlice = createSlice({
       .addCase(fetchClaims.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || "Failed to fetch claims";
+      })
+      // Fetch Claim by ID
+      .addCase(fetchClaimById.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+        state.currentClaim = null;
+      })
+      .addCase(
+        fetchClaimById.fulfilled,
+        (state, action: PayloadAction<Claim>) => {
+          state.status = "succeeded";
+          state.currentClaim = action.payload;
+        }
+      )
+      .addCase(fetchClaimById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || "Failed to fetch claim details";
       });
   },
 });
+
+export const { clearCurrentClaim, updateClaimStatus } = claimsSlice.actions;
 
 export const selectClaims = (state: RootState) => state.claims;
 

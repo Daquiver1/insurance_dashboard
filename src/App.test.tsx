@@ -1,9 +1,10 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+// src/App.test.tsx
+import React from "react";
+import { render, screen } from "./test-utils"; // Adjust the path if necessary
+import App from "./App";
 
-test('renders learn react link', () => {
+test("renders Dashboard Overview", () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const headingElement = screen.getByText(/Dashboard Overview/i);
+  expect(headingElement).toBeInTheDocument();
 });

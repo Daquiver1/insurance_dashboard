@@ -1,12 +1,17 @@
-// src/components/common/Layout.tsx
 import React from "react";
-import Sidebar from "./Sidebar";
+import { Outlet } from "react-router-dom";
+import Sidebar from "../common/Sidebar";
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
+const Layout = () => {
   return (
-    <div className="flex">
+    <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
-      <main className="flex-1 p-4">{children}</main>
+      <main className="flex-1 overflow-auto">
+        <div className="container mx-auto p-6">
+          <Outlet />
+        </div>
+      </main>
     </div>
   );
 };

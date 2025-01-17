@@ -1,34 +1,17 @@
 // src/app/slices/authSlice.ts
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import api from "../../api/api";
+import { AuthState, LoginCredentials, User } from "../../types";
 import { RootState } from "../store";
 
-interface User {
-  id: number;
-  username: string;
-  name: string;
-}
-
-interface AuthState {
-  user: User | null;
-  token: string | null; // For simulation purposes
-  status: "idle" | "loading" | "succeeded" | "failed";
-  error: string | null;
-}
-
-interface LoginCredentials {
-  username: string;
-  password: string;
-}
-
 const initialState: AuthState = {
+  isAuthenticated: false,
   user: null,
   token: null,
   status: "idle",
   error: null,
 };
 
-// Async thunk for logging in
 export const login = createAsyncThunk<
   { user: User; token: string },
   LoginCredentials,
@@ -50,18 +33,14 @@ export const login = createAsyncThunk<
   }
 });
 
-// Async thunk for logging out (simulated)
 export const logout = createAsyncThunk("auth/logout", async () => {
-  // In a real app, you'd perform logout actions here
   return;
 });
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    // You can add synchronous actions here if needed
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       // Login
@@ -75,11 +54,13 @@ const authSlice = createSlice({
           state.status = "succeeded";
           state.user = action.payload.user;
           state.token = action.payload.token;
+          state.isAuthenticated = true;
         }
       )
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || "Failed to login";
+        state.isAuthenticated = false;
       })
       // Logout
       .addCase(logout.fulfilled, (state) => {
@@ -87,6 +68,7 @@ const authSlice = createSlice({
         state.token = null;
         state.status = "idle";
         state.error = null;
+        state.isAuthenticated = false;
       });
   },
 });

@@ -1,18 +1,17 @@
-// src/pages/SubmitClaim.tsx
+import { AlertCircle, PlusCircle, UploadIcon, X } from "lucide-react";
 import React, { useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { submitClaim, selectClaims } from "../app/slices/claimsSlice";
-import { fetchPolicies, selectPolicies } from "../app/slices/policiesSlice";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { selectClaims, submitClaim } from "../app/slices/claimsSlice";
+import { fetchPolicies, selectPolicies } from "../app/slices/policiesSlice";
+import { ClaimFormInputs } from "../types";
 
-interface ClaimFormInputs {
-  policyId: number;
-  claimType: string;
-  description: string;
-  files: FileList;
+interface FilePreview {
+  name: string;
+  size: string;
 }
 
 const SubmitClaim: React.FC = () => {
@@ -23,9 +22,11 @@ const SubmitClaim: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<ClaimFormInputs>();
   const claimsState = useAppSelector(selectClaims);
   const policiesState = useAppSelector(selectPolicies);
+  const watchFiles = watch("files");
 
   useEffect(() => {
     if (policiesState.status === "idle") {
@@ -33,12 +34,19 @@ const SubmitClaim: React.FC = () => {
     }
   }, [policiesState.status, dispatch]);
 
+  const getFilePreviews = (): FilePreview[] => {
+    if (!watchFiles) return [];
+    return Array.from(watchFiles).map((file) => ({
+      name: file.name,
+      size: (file.size / 1024 / 1024).toFixed(2) + " MB",
+    }));
+  };
+
   const onSubmit: SubmitHandler<ClaimFormInputs> = async (data) => {
-    // Simulate file upload by converting to base64 or similar
-    const uploadedFiles = Array.from(data.files).map((file) => file.name); // Simplified
+    const uploadedFiles = Array.from(data.files).map((file) => file.name);
 
     const claimData = {
-      userId: 0, // Will be set in the thunk
+      userId: 0,
       policyId: data.policyId,
       claimType: data.claimType,
       description: data.description,
@@ -56,92 +64,189 @@ const SubmitClaim: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+    <div className="space-y-6">
+      {/* Header Section */}
+      <div className="flex items-center gap-3">
+        <PlusCircle className="w-8 h-8 text-red-600" />
+        <h2 className="text-2xl font-bold text-gray-900">Submit a New Claim</h2>
+      </div>
+
       <ToastContainer />
-      <h2 className="text-2xl font-semibold mb-4">Submit a New Claim</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Policy Number Dropdown */}
-        <div>
-          <label className="block mb-1">Policy Number</label>
-          <select
-            {...register("policyId", { required: "Policy number is required" })}
-            className="w-full px-3 py-2 border rounded"
-          >
-            <option value="">Select a Policy</option>
-            {policiesState.policies.map((policy) => (
-              <option key={policy.id} value={policy.id}>
-                {policy.id} - {policy.type}
-              </option>
-            ))}
-          </select>
-          {errors.policyId && (
-            <p className="text-red-500 text-sm">{errors.policyId.message}</p>
-          )}
-        </div>
 
-        {/* Claim Type */}
-        <div>
-          <label className="block mb-1">Claim Type</label>
-          <input
-            type="text"
-            {...register("claimType", { required: "Claim type is required" })}
-            className="w-full px-3 py-2 border rounded"
-            placeholder="e.g., Medical, Theft"
-          />
-          {errors.claimType && (
-            <p className="text-red-500 text-sm">{errors.claimType.message}</p>
-          )}
-        </div>
+      {/* Form Section */}
+      <div className="bg-white rounded-lg shadow-sm">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
+          {/* Policy & Claim Type Section */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Policy Number */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Policy Number <span className="text-red-500">*</span>
+              </label>
+              <select
+                {...register("policyId", {
+                  required: "Policy number is required",
+                })}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white"
+              >
+                <option value="">Select a Policy</option>
+                {policiesState.policies.map((policy) => (
+                  <option key={policy.id} value={policy.id}>
+                    Policy #{policy.id} - {policy.type}
+                  </option>
+                ))}
+              </select>
+              {errors.policyId && (
+                <p className="flex items-center gap-1 text-red-500 text-sm">
+                  <AlertCircle className="w-4 h-4" />
+                  {errors.policyId.message}
+                </p>
+              )}
+            </div>
 
-        {/* Description */}
-        <div>
-          <label className="block mb-1">Description</label>
-          <textarea
-            {...register("description", {
-              required: "Description is required",
-            })}
-            className="w-full px-3 py-2 border rounded"
-            placeholder="Describe the incident..."
-            rows={4}
-          ></textarea>
-          {errors.description && (
-            <p className="text-red-500 text-sm">{errors.description.message}</p>
-          )}
-        </div>
+            {/* Claim Type */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Claim Type <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                {...register("claimType", {
+                  required: "Claim type is required",
+                })}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder="e.g., Medical, Theft, Property Damage"
+              />
+              {errors.claimType && (
+                <p className="flex items-center gap-1 text-red-500 text-sm">
+                  <AlertCircle className="w-4 h-4" />
+                  {errors.claimType.message}
+                </p>
+              )}
+            </div>
+          </div>
 
-        {/* Upload Files */}
-        <div>
-          <label className="block mb-1">Upload Files</label>
-          <input
-            type="file"
-            {...register("files", {
-              required: "At least one file is required",
-            })}
-            className="w-full"
-            multiple
-          />
-          {errors.files && (
-            <p className="text-red-500 text-sm">{errors.files.message}</p>
-          )}
-        </div>
+          {/* Description */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Description <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              {...register("description", {
+                required: "Description is required",
+                minLength: {
+                  value: 50,
+                  message: "Description should be at least 50 characters",
+                },
+              })}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              placeholder="Please provide detailed information about your claim..."
+              rows={6}
+            />
+            {errors.description && (
+              <p className="flex items-center gap-1 text-red-500 text-sm">
+                <AlertCircle className="w-4 h-4" />
+                {errors.description.message}
+              </p>
+            )}
+          </div>
 
-        {/* Submit Button */}
-        <div>
-          <button
-            type="submit"
-            className={`w-full px-4 py-2 text-white rounded ${
-              claimsState.status === "loading"
-                ? "bg-gray-500"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-            disabled={claimsState.status === "loading"}
-          >
-            {claimsState.status === "loading"
-              ? "Submitting..."
-              : "Submit Claim"}
-          </button>
-        </div>
-      </form>
+          {/* File Upload */}
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Supporting Documents <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="file"
+                  {...register("files", {
+                    required: "At least one file is required",
+                  })}
+                  className="hidden"
+                  id="file-upload"
+                  multiple
+                />
+                <label
+                  htmlFor="file-upload"
+                  className="flex items-center justify-center w-full px-4 py-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-red-500 cursor-pointer transition-colors"
+                >
+                  <div className="text-center">
+                    <UploadIcon className="w-8 h-8 text-red-500 mx-auto mb-2" />
+                    <p className="text-sm font-medium text-gray-700">
+                      Drop files here or click to upload
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Support for images, PDFs, and documents
+                    </p>
+                  </div>
+                </label>
+              </div>
+              {errors.files && (
+                <p className="flex items-center gap-1 text-red-500 text-sm">
+                  <AlertCircle className="w-4 h-4" />
+                  {errors.files.message}
+                </p>
+              )}
+            </div>
+
+            {/* File Previews */}
+            {getFilePreviews().length > 0 && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-700">
+                  Selected Files:
+                </p>
+                <div className="space-y-2">
+                  {getFilePreviews().map((file, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
+                      <div className="flex items-center gap-2">
+                        <UploadIcon className="w-4 h-4 text-gray-500" />
+                        <span className="text-sm text-gray-700">
+                          {file.name}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          ({file.size})
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className="text-gray-400 hover:text-red-500"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-end pt-4">
+            <button
+              type="submit"
+              className={`px-6 py-3 text-white rounded-lg font-medium transition-colors ${
+                claimsState.status === "loading"
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-red-600 hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              }`}
+              disabled={claimsState.status === "loading"}
+            >
+              {claimsState.status === "loading" ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Processing...
+                </div>
+              ) : (
+                "Submit Claim"
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

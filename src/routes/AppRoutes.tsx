@@ -1,79 +1,46 @@
 // src/routes/AppRoutes.tsx
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import Layout from "../components/common/Layout";
 import ProtectedRoute from "../components/common/ProtectedRoute";
-import Sidebar from "../components/common/Sidebar";
-import Dashboard from "../pages/Dashboard";
+import ClaimsHistory from "../pages/ClaimsHistory";
 import Login from "../pages/Login";
 import PolicyDetails from "../pages/PolicyDetails";
 import SubmitClaim from "../pages/SubmitClaim";
-import About from "../pages/about";
-import Home from "../pages/home";
+
+const Dashboard = lazy(() => import("../pages/Dashboard"));
 
 const AppRoutes: React.FC = () => {
   return (
     <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
 
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route
-            path="/dashboard"
-            element={
-              <div className="flex">
-                <Sidebar />
-                <div className="flex-1 p-4">
-                  <Dashboard />
-                </div>
-              </div>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <div className="flex">
-                <Sidebar />
-                <div className="flex-1 p-4">
-                  <About />
-                </div>
-              </div>
-            }
-          />
-          <Route
-            path="/policies/:id"
-            element={
-              <div className="flex">
-                <Sidebar />
-                <div className="flex-1 p-4">
-                  <PolicyDetails />
-                </div>
-              </div>
-            }
-          />
-          <Route
-            path="/submit-claim"
-            element={
-              <div className="flex">
-                <Sidebar />
-                <div className="flex-1 p-4">
-                  <SubmitClaim />
-                </div>
-              </div>
-            }
-          />
-        </Route>
+          {/* Protected Routes with Layout */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<Layout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/policies/:id" element={<PolicyDetails />} />
+              <Route path="/submit-claim" element={<SubmitClaim />} />
+              <Route path="/claims-history" element={<ClaimsHistory />} />
+            </Route>
+          </Route>
 
-        {/* Fallback Route */}
-        <Route
-          path="*"
-          element={
-            <h1 className="text-center mt-10 text-3xl">404 - Not Found</h1>
-          }
-        />
-      </Routes>
+          <Route
+            path="*"
+            element={
+              <div className="flex min-h-screen items-center justify-center">
+                <h1 className="text-3xl font-bold text-gray-800">
+                  404 - Not Found
+                </h1>
+              </div>
+            }
+          />
+        </Routes>
+      </Suspense>
     </Router>
   );
 };

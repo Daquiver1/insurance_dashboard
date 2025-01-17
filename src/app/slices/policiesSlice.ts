@@ -1,23 +1,8 @@
 // src/app/slices/policiesSlice.ts
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import api from "../../api/api";
 import { RootState } from "../store";
-
-export type PolicyType = "Health" | "Auto" | "Home";
-export type PolicyStatus = "active" | "pending" | "expired";
-
-export interface Policy {
-  id: number;
-  userId: number;
-  type: PolicyType;
-  status: PolicyStatus;
-  details: string;
-  startDate: string;
-  endDate: string;
-  coverageDetails: string;
-  premiumAmount: number;
-  documentUrl: string;
-}
+import { Policy } from "../../types";
 
 interface PoliciesState {
   policies: Policy[];
@@ -31,6 +16,20 @@ const initialState: PoliciesState = {
   currentPolicy: null,
   status: "idle",
   error: null,
+};
+
+export const selectPoliciesNearExpiry = (
+  state: RootState,
+  days: number = 30
+): Policy[] => {
+  const today = new Date();
+  return state.policies.policies.filter((policy) => {
+    const endDate = new Date(policy.endDate);
+    const daysLeft = Math.ceil(
+      (endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    return daysLeft > 0 && daysLeft <= days;
+  });
 };
 
 // Fetch policies for the authenticated user
@@ -68,12 +67,17 @@ export const fetchPolicyById = createAsyncThunk<
     }
 
     try {
-      const response = await api.get<Policy>(`/policies/${policyId}`);
-      if (response.data.userId !== auth.user.id) {
-        return rejectWithValue("Access denied");
+      console.log("This is the policyId", policyId);
+      const response = await api.get<Policy[]>(
+        `/policies?id=${policyId}&userId=${auth.user.id}`
+      );
+      if (!response.data || response.data.length === 0) {
+        return rejectWithValue("Policy not found");
       }
-      return response.data;
+      const policy = response.data[0];
+      return policy;
     } catch (error) {
+      console.log("This is the error", error);
       return rejectWithValue("Failed to fetch policy details");
     }
   }
