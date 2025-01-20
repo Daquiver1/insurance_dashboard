@@ -1,5 +1,5 @@
 export interface Policy {
-  id: string;
+  id: number;
   type: PolicyType;
   status: PolicyStatus;
   details: string;

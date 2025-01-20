@@ -41,10 +41,9 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
-      {/* Mobile Header */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 px-4 flex items-center justify-between z-30">
         <div className="flex items-center gap-2">
-          <Shield className="h-6 w-6 text-red-600" />
+          <Shield data-testid="shield-icon" className="h-6 w-6 text-red-600" />
           <span className="font-semibold text-gray-900">Insurance Portal</span>
         </div>
         <button
@@ -60,7 +59,6 @@ const Sidebar: React.FC = () => {
         </button>
       </div>
 
-      {/* Overlay */}
       {isOpen && (
         <div
           className="md:hidden fixed inset-0 bg-gray-800/50 z-30"
@@ -68,50 +66,52 @@ const Sidebar: React.FC = () => {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`fixed md:sticky top-0 left-0 h-full w-80 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out z-40 
           ${isOpen ? "translate-x-0" : "-translate-x-full"} 
           md:translate-x-0`}
       >
         <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="h-16 flex items-center gap-2 px-6 border-b border-gray-200">
-            <Shield className="h-6 w-6 text-red-600" />
+          <div className="h-16 flex-shrink-0 flex items-center gap-2 px-6 border-b border-gray-200">
+            <Shield
+              data-testid="shield-icon"
+              className="h-6 w-6 text-red-600"
+            />
             <h1 className="text-xl font-bold text-gray-900">
               Insurance Portal
             </h1>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto p-4 space-y-2">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={navLinkClass}
-                onClick={closeSidebar}
-              >
-                <item.icon className="w-5 h-5" />
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
+          <div className="flex flex-col h-full">
+            <nav className="flex-none p-4 space-y-2">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={navLinkClass}
+                  onClick={closeSidebar}
+                >
+                  <item.icon className="w-5 h-5" />
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
 
-          {/* Logout at bottom */}
-          <div className="p-4 mt-auto border-t border-gray-200">
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-3 w-full px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors"
-            >
-              <LogOut className="w-5 h-5" />
-              Logout
-            </button>
+            <div className="flex-grow" />
+
+            <div className="flex-none p-4 border-t border-gray-200">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-3 w-full px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors"
+              >
+                <LogOut className="w-5 h-5" />
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </aside>
 
-      {/* Mobile padding compensation */}
       <div className="h-16 md:hidden" />
     </>
   );

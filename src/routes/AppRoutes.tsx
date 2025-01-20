@@ -3,9 +3,10 @@ import React, { Suspense, lazy } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Layout from "../components/common/Layout";
 import ProtectedRoute from "../components/common/ProtectedRoute";
-import ClaimsHistory from "../pages/ClaimsHistory";
+import ClaimHistory from "../pages/ClaimHistory";
 import Login from "../pages/Login";
 import PolicyDetails from "../pages/PolicyDetails";
+import Signup from "../pages/Signup";
 import SubmitClaim from "../pages/SubmitClaim";
 
 const Dashboard = lazy(() => import("../pages/Dashboard"));
@@ -15,17 +16,16 @@ const AppRoutes: React.FC = () => {
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          {/* Public Routes */}
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
-          {/* Protected Routes with Layout */}
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/policies/:id" element={<PolicyDetails />} />
               <Route path="/submit-claim" element={<SubmitClaim />} />
-              <Route path="/claims-history" element={<ClaimsHistory />} />
+              <Route path="/claims-history" element={<ClaimHistory />} />
             </Route>
           </Route>
 

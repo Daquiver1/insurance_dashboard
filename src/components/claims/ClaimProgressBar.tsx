@@ -15,12 +15,10 @@ const ClaimProgressBar: React.FC<ClaimProgressBarProps> = ({ status }) => {
   ];
 
   const currentStageIndex = stages.findIndex((stage) => stage.key === status);
-
   const percentage = ((currentStageIndex + 1) / stages.length) * 100;
 
   return (
     <div className="mt-4">
-      {/* Progress Bar */}
       <div className="relative mb-4">
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div
@@ -28,7 +26,6 @@ const ClaimProgressBar: React.FC<ClaimProgressBarProps> = ({ status }) => {
             style={{ width: `${percentage}%` }}
           ></div>
         </div>
-        {/* Stage Indicators */}
         <div className="absolute top-0 left-0 w-full flex justify-between px-1">
           {stages.map((stage, index) => (
             <div key={stage.key} className="flex flex-col items-center mt-4">
@@ -39,7 +36,9 @@ const ClaimProgressBar: React.FC<ClaimProgressBarProps> = ({ status }) => {
                 aria-label={stage.label}
                 title={stage.label}
               >
-                {index <= currentStageIndex && <Check className="w-3 h-3" />}
+                {index <= currentStageIndex && (
+                  <Check className="w-3 h-3" role="img" aria-hidden="true" />
+                )}
               </div>
               <span className="text-xs mt-1 text-gray-600">{stage.label}</span>
             </div>

@@ -11,7 +11,6 @@ const initialState: ClaimsState = {
   error: null,
 };
 
-// Submit a new claim
 export const submitClaim = createAsyncThunk<
   Claim,
   Omit<Claim, "id" | "status" | "submittedAt" | "history">,
@@ -42,7 +41,6 @@ const { auth } = getState();
   }
 });
 
-// Fetch claims for the authenticated user
 export const fetchClaims = createAsyncThunk<
   Claim[],
   void,
@@ -61,7 +59,6 @@ export const fetchClaims = createAsyncThunk<
   }
 });
 
-// Fetch a single claim by ID
 export const fetchClaimById = createAsyncThunk<
   Claim,
   number,
@@ -114,7 +111,6 @@ const claimsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Submit Claim
       .addCase(submitClaim.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -127,7 +123,6 @@ const claimsSlice = createSlice({
         state.status = "failed";
         state.error = action.payload || "Failed to submit claim";
       })
-      // Fetch Claims
       .addCase(fetchClaims.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -143,7 +138,6 @@ const claimsSlice = createSlice({
         state.status = "failed";
         state.error = action.payload || "Failed to fetch claims";
       })
-      // Fetch Claim by ID
       .addCase(fetchClaimById.pending, (state) => {
         state.status = "loading";
         state.error = null;

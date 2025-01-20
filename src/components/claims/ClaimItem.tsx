@@ -11,11 +11,10 @@ interface ClaimItemProps {
 const ClaimItem: React.FC<ClaimItemProps> = ({
   claim,
   getStatusColor,
-  onSelectClaim,
+onSelectClaim,
 }) => {
   return (
     <div className="p-6 bg-white rounded-lg border border-gray-200 hover:border-red-200 transition-colors duration-200 flex flex-col justify-between">
-      {/* Claim Header */}
       <div>
         <div className="flex items-center gap-2 mb-2">
           <h3 className="text-lg font-semibold text-gray-900">
@@ -32,12 +31,10 @@ const ClaimItem: React.FC<ClaimItemProps> = ({
         <p className="text-gray-600">Type: {claim.claimType}</p>
       </div>
 
-      {/* Progress Bar */}
       <div className="my-4">
         <ClaimProgressBar status={claim.status} />
       </div>
 
-      {/* View Status Button */}
       <div className="flex mt-8 justify-center">
         <button
           onClick={() => onSelectClaim(claim)}

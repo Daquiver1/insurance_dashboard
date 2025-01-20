@@ -34,14 +34,12 @@ const PolicyItem: React.FC<PolicyItemProps> = ({ policy }) => {
   return (
     <Link to={`/policies/${policy.id}`} className="block group">
       <div className="relative h-full p-6 bg-white rounded-xl border border-gray-200 shadow-sm transition-all duration-300 hover:shadow-lg hover:border-red-200">
-        {/* Status Badge */}
         <div
           className={`absolute right-6 top-6 px-3 py-1 rounded-full text-sm font-medium ${status.color} ${status.bgColor} ${status.borderColor} border`}
         >
           {policy.status.charAt(0).toUpperCase() + policy.status.slice(1)}
         </div>
 
-        {/* Policy Type & Details */}
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-2">
             <AlertCircle className="w-5 h-5 text-red-600" />
@@ -52,7 +50,6 @@ const PolicyItem: React.FC<PolicyItemProps> = ({ policy }) => {
           <p className="text-gray-600 line-clamp-2">{policy.details}</p>
         </div>
 
-        {/* Price Section */}
         <div className="flex items-center justify-between mt-4">
           <span className="text-sm text-gray-600">Premium:</span>
           <span className="text-sm font-semibold text-gray-900">
@@ -60,7 +57,6 @@ const PolicyItem: React.FC<PolicyItemProps> = ({ policy }) => {
           </span>
         </div>
 
-        {/* Dates Section */}
         <div className="space-y-3 mt-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Calendar className="w-4 h-4 text-red-500" />
@@ -74,7 +70,6 @@ const PolicyItem: React.FC<PolicyItemProps> = ({ policy }) => {
           </div>
         </div>
 
-        {/* Time Remaining Indicator */}
         {daysRemaining > 0 && policy.status !== "expired" && (
           <div className="mt-4 pt-4 border-t border-gray-100">
             <div className="flex items-center gap-2 text-sm">
@@ -86,7 +81,6 @@ const PolicyItem: React.FC<PolicyItemProps> = ({ policy }) => {
           </div>
         )}
 
-        {/* Hover Effect Overlay */}
         <div className="absolute inset-0 border-2 border-transparent rounded-xl transition-colors duration-300 group-hover:border-red-500/20" />
       </div>
     </Link>

@@ -9,7 +9,10 @@ interface EmptyStateProps {
 const EmptyState: React.FC<EmptyStateProps> = ({ type, message }) => {
   return (
     <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-      <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+      <FileText
+        data-testid="file-text-icon"
+        className="w-12 h-12 text-gray-400 mx-auto mb-4"
+      />
       <h3 className="text-lg font-medium text-gray-900 mb-2">
         No {type.charAt(0).toUpperCase() + type.slice(1)} Found
       </h3>

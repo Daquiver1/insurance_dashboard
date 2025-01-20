@@ -1,7 +1,12 @@
 // src/app/slices/authSlice.ts
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import api from "../../api/api";
-import { AuthState, LoginCredentials, User } from "../../types";
+import {
+  AuthState,
+  LoginCredentials,
+  SignupFormInputs,
+  User,
+} from "../../types";
 import { RootState } from "../store";
 
 const initialState: AuthState = {
@@ -23,13 +28,29 @@ export const login = createAsyncThunk<
     );
     if (response.data.length > 0) {
       const user = response.data[0];
-      const token = "mock-token"; // In real apps, you'd get this from the server
+      const token = "temp";
       return { user, token };
     } else {
       return rejectWithValue("Invalid username or password");
     }
   } catch (error) {
     return rejectWithValue("An error occurred during login");
+  }
+});
+
+export const signup = createAsyncThunk<
+  User,
+  Omit<SignupFormInputs, "confirmPassword">,
+  { rejectValue: string }
+>("auth/signup", async (data, { rejectWithValue }) => {
+  try {
+    const newUser: Omit<SignupFormInputs, "confirmPassword"> = {
+      ...data,
+    };
+    const response = await api.post<User>("/users", newUser);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue("An error occurred during signup");
   }
 });
 
@@ -43,6 +64,21 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      //Signup
+      .addCase(signup.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(signup.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(signup.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || "Failed to signup";
+        state.isAuthenticated = false;
+      })
       // Login
       .addCase(login.pending, (state) => {
         state.status = "loading";

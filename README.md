@@ -11,6 +11,7 @@ A Claims Management System built with React and Tailwind CSS. This dashboard-bas
   - [Installation](#installation)
   - [Running the Application](#running-the-application)
 - [Technologies Used](#technologies-used)
+- [Deployment](#deployment)
 
 ## Features
 
@@ -50,7 +51,7 @@ React Router handles navigation in the app, making it easy to move between pages
 
 ### 7. **Testing with Jest and React Testing Library**
 
-Jest and React Testing Library are used to test the app. 
+Jest and React Testing Library are used to test the app.
 
 ### 8. **Mock API with JSON Server**
 
@@ -106,7 +107,14 @@ Follow these instructions to set up and run the project locally.
 
    This will launch the application in your default browser at `http://localhost:3000`.
 
-3. **Running Tests**
+3. **Login**
+
+   Use the following credentials to log in:
+
+   - **Username**: `user`
+   - **Password**: `user123`
+
+4. **Running Tests**
 
    To execute the test suite:
 
@@ -127,3 +135,7 @@ Follow these instructions to set up and run the project locally.
 - **Jest**
 - **React Testing Library**
 - **Lucide-React**
+
+## Deployment
+
+The app is deployed on vercel and can be accessed [here](https://insurance-dashboard-peach.vercel.app/)

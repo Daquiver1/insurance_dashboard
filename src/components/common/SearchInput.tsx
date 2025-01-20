@@ -6,7 +6,7 @@ interface SearchInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   ariaLabel?: string;
-  className?: string; // Additional classes for customization
+  className?: string;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
@@ -18,7 +18,10 @@ const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
   return (
     <div className={`relative ${className}`}>
-      <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+      <Search
+        data-testid="search-icon"
+        className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
+      />
       <input
         type="text"
         placeholder={placeholder}

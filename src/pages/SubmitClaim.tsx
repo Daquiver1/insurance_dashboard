@@ -57,7 +57,7 @@ const SubmitClaim: React.FC = () => {
       await dispatch(submitClaim(claimData)).unwrap();
       toast.success("Claim submitted successfully!");
       reset();
-      navigate("/dashboard");
+      navigate("/claims-history");
     } catch (error) {
       toast.error((error as string) || "Failed to submit claim.");
     }
@@ -73,12 +73,9 @@ const SubmitClaim: React.FC = () => {
 
       <ToastContainer />
 
-      {/* Form Section */}
       <div className="bg-white rounded-lg shadow-sm">
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
-          {/* Policy & Claim Type Section */}
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Policy Number */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 Policy Number <span className="text-red-500">*</span>
@@ -104,7 +101,6 @@ const SubmitClaim: React.FC = () => {
               )}
             </div>
 
-            {/* Claim Type */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 Claim Type <span className="text-red-500">*</span>
@@ -126,7 +122,6 @@ const SubmitClaim: React.FC = () => {
             </div>
           </div>
 
-          {/* Description */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
               Description <span className="text-red-500">*</span>
@@ -151,7 +146,6 @@ const SubmitClaim: React.FC = () => {
             )}
           </div>
 
-          {/* File Upload */}
           <div className="space-y-4">
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
@@ -190,7 +184,6 @@ const SubmitClaim: React.FC = () => {
               )}
             </div>
 
-            {/* File Previews */}
             {getFilePreviews().length > 0 && (
               <div className="space-y-2">
                 <p className="text-sm font-medium text-gray-700">
@@ -224,7 +217,6 @@ const SubmitClaim: React.FC = () => {
             )}
           </div>
 
-          {/* Submit Button */}
           <div className="flex justify-end pt-4">
             <button
               type="submit"

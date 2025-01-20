@@ -22,6 +22,8 @@ const rootReducer = combineReducers({
   auth: authReducer,
 });
 
+export { rootReducer };
+
 const persistConfig = {
   key: "root",
   storage,

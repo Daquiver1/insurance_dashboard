@@ -15,7 +15,7 @@ const statusColors: Record<ClaimStatus, string> = {
   rejected: "bg-red-50 text-red-700 border-red-200",
 };
 
-const ClaimsHistory = () => {
+const ClaimHistory = () => {
   const dispatch = useAppDispatch();
   const claimsState = useAppSelector(selectClaims);
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,7 +31,8 @@ const ClaimsHistory = () => {
   const filteredClaims = claimsState.claims.filter((claim) => {
     const matchesSearch =
       claim.claimType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      claim.id.toString().includes(searchTerm);
+      claim.id.toString().includes(searchTerm) ||
+      claim.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType =
       selectedType === "all" || claim.claimType.toLowerCase() === selectedType;
     return matchesSearch && matchesType;
@@ -129,4 +130,4 @@ const ClaimsHistory = () => {
   );
 };
 
-export default ClaimsHistory;
+export default ClaimHistory;

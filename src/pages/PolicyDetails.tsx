@@ -51,6 +51,7 @@ const PolicyDetails: React.FC = () => {
             {[1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="h-4 bg-gray-200 rounded"></div>
             ))}
+            Loading
           </div>
         </div>
       </div>
@@ -90,7 +91,6 @@ const PolicyDetails: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Header Section */}
       <div className="bg-white p-6 rounded-t-lg border-b border-gray-200">
         <div className="flex items-center gap-3">
           <FileText className="w-8 h-8 text-red-600" />
@@ -108,7 +108,6 @@ const PolicyDetails: React.FC = () => {
         </div>
       </div>
 
-      {/* Content Section */}
       <div className="bg-white p-6 rounded-b-lg shadow-sm">
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -161,7 +160,6 @@ const PolicyDetails: React.FC = () => {
             <p className="mt-1 text-base text-gray-900">{policy.details}</p>
           </div>
 
-          {/* Download Button */}
           <div className="flex justify-end pt-4">
             <button
               onClick={handleDownload}

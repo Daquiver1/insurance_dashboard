@@ -11,8 +11,14 @@ import PremiumTrendsChart from "../components/visualization/PremiumTrendsChart";
 import { PolicyStatus, PolicyType } from "../types";
 
 const Dashboard: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const policiesState = useAppSelector(selectPolicies);
+  const dispatch = useAppDispatch();  
+  const policiesState = useAppSelector(selectPolicies) || {
+  status: 'idle',
+  policies: [],
+  currentPolicy: null,
+  error: null
+};
+
 
   const [searchTerm, setSearchTerm] = React.useState("");
   const [filterType, setFilterType] = React.useState<PolicyType | "All">("All");
@@ -82,7 +88,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Section */}
       <div className="flex items-center gap-3">
         <LayoutDashboard className="w-8 h-8 text-red-600" />
         <h2 className="text-2xl font-bold text-gray-900">
@@ -90,13 +95,10 @@ const Dashboard: React.FC = () => {
         </h2>
       </div>
 
-      {/* Reminder Section */}
       <RenewalReminder />
 
-      {/* Main Content */}
       <div className="bg-white rounded-lg shadow-sm">
         <div className="p-6 space-y-6">
-          {/* Search and Filters */}
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-4 lg:space-y-0 lg:space-x-4">
             <SearchInput
               placeholder="Search policies..."
@@ -146,7 +148,6 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* Policy List */}
           {filteredPolicies.length > 0 ? (
             <PolicyList policies={filteredPolicies} />
           ) : (
@@ -162,7 +163,6 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-lg shadow-sm">
           <div className="border-b border-gray-200 p-6">

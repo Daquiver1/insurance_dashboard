@@ -3,7 +3,7 @@ import { User } from ".";
 export interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
-  token: string | null; // For simulation purposes
+  token: string | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }

@@ -1,8 +1,8 @@
 // src/app/slices/policiesSlice.ts
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import api from "../../api/api";
-import { RootState } from "../store";
 import { Policy } from "../../types";
+import { RootState } from "../store";
 
 interface PoliciesState {
   policies: Policy[];
@@ -32,7 +32,6 @@ export const selectPoliciesNearExpiry = (
   });
 };
 
-// Fetch policies for the authenticated user
 export const fetchPolicies = createAsyncThunk<
   Policy[],
   void,
@@ -52,8 +51,6 @@ export const fetchPolicies = createAsyncThunk<
     return rejectWithValue("Failed to fetch policies");
   }
 });
-
-// Fetch a single policy by ID
 export const fetchPolicyById = createAsyncThunk<
   Policy,
   number,
@@ -67,7 +64,6 @@ export const fetchPolicyById = createAsyncThunk<
     }
 
     try {
-      console.log("This is the policyId", policyId);
       const response = await api.get<Policy[]>(
         `/policies?id=${policyId}&userId=${auth.user.id}`
       );
@@ -77,7 +73,6 @@ export const fetchPolicyById = createAsyncThunk<
       const policy = response.data[0];
       return policy;
     } catch (error) {
-      console.log("This is the error", error);
       return rejectWithValue("Failed to fetch policy details");
     }
   }
@@ -87,7 +82,6 @@ const policiesSlice = createSlice({
   name: "policies",
   initialState,
   reducers: {
-    // Define synchronous actions here if needed
     clearCurrentPolicy(state) {
       state.currentPolicy = null;
       state.error = null;
@@ -96,7 +90,6 @@ const policiesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch Policies
       .addCase(fetchPolicies.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -112,7 +105,6 @@ const policiesSlice = createSlice({
         state.status = "failed";
         state.error = action.payload || "Failed to fetch policies";
       })
-      // Fetch Policy by ID
       .addCase(fetchPolicyById.pending, (state) => {
         state.status = "loading";
         state.error = null;

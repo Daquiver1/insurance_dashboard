@@ -2,7 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import "./assets/styles/index.css"; // Import Tailwind CSS
+import "./assets/styles/index.css";
 import "./index.css";
 import { Provider } from "react-redux";
 import store, { persistor } from "./app/store";

@@ -44,15 +44,15 @@ const PremiumTrendsChart: React.FC<PremiumTrendsChartProps> = ({
   const data = processData();
 
   const formatYAxis = (value: number) => `$${value.toLocaleString()}`;
-  const formatTooltip = (value: number) => `$${value.toLocaleString()}`;
+  const formatTooltip = (value: number) =>
+    isNaN(value) ? "N/A" : `$${value.toLocaleString()}`;
 
-  // Calculate total and average metrics
   const totalPremiums = data.reduce((sum, item) => sum + item.totalPremium, 0);
-  const averagePremium = Math.round(totalPremiums / policies.length);
+  const averagePremium =
+    policies.length > 0 ? Math.round(totalPremiums / policies.length) : null;
 
   return (
     <div className="space-y-6">
-      {/* Header with metrics */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-red-50 p-4 rounded-lg">
           <p className="text-sm text-red-600 font-medium">Total Premiums</p>
@@ -63,12 +63,13 @@ const PremiumTrendsChart: React.FC<PremiumTrendsChartProps> = ({
         <div className="bg-red-50 p-4 rounded-lg">
           <p className="text-sm text-red-600 font-medium">Average Premium</p>
           <p className="text-2xl font-bold text-gray-900">
-            ${averagePremium.toLocaleString()}
+            {averagePremium !== null
+              ? `$${averagePremium.toLocaleString()}`
+              : "N/A"}
           </p>
         </div>
       </div>
 
-      {/* Chart */}
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart

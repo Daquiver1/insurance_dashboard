@@ -1,29 +1,28 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import { Eye, EyeOff, Lock, Shield, User } from "lucide-react";
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { login } from "../app/slices/authSlice";
+import { signup } from "../app/slices/authSlice";
+import { SignupFormInputs } from "../types";
 
-interface LoginFormInputs {
-  username: string;
-  password: string;
-  rememberMe: boolean;
-}
-
-const Login: React.FC = () => {
-    const [showPassword, setShowPassword] = useState(false);
+const Signup: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const dispatch = useAppDispatch();
+  const auth = useAppSelector((state) => state.auth);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormInputs>();
-  const auth = useAppSelector((state) => state.auth);
+    watch,
+  } = useForm<SignupFormInputs>();
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-    dispatch(login(data));
+  const password = watch("password");
+
+  const onSubmit: SubmitHandler<SignupFormInputs> = (data) => {
+    dispatch(signup(data));
   };
 
   if (auth.user) {
@@ -37,10 +36,8 @@ const Login: React.FC = () => {
           <div className="flex justify-center">
             <Shield className="w-16 h-16 text-red-600" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-800">
-            Insurance Dashboard
-          </h1>
-          <p className="text-gray-600">Sign in to access your dashboard</p>
+          <h1 className="text-3xl font-bold text-gray-800">Create Account</h1>
+          <p className="text-gray-600">Join our insurance platform</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-xl p-8 space-y-6">
@@ -53,6 +50,21 @@ const Login: React.FC = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
+                Full Name
+              </label>
+              <input
+                type="text"
+                {...register("name", { required: "Full name is required" })}
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder="John Doe"
+              />
+              {errors.name && (
+                <p className="text-red-600 text-sm">{errors.name.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
                 Username
               </label>
               <div className="relative">
@@ -63,13 +75,17 @@ const Login: React.FC = () => {
                   type="text"
                   {...register("username", {
                     required: "Username is required",
+                    minLength: {
+                      value: 3,
+                      message: "Username must be at least 3 characters",
+                    },
                   })}
                   className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                  placeholder="Enter your username"
+                  placeholder="Choose a username"
                 />
               </div>
               {errors.username && (
-                <p className="text-red-600 text-sm mt-1">
+                <p className="text-red-600 text-sm">
                   {errors.username.message}
                 </p>
               )}
@@ -87,9 +103,13 @@ const Login: React.FC = () => {
                   type={showPassword ? "text" : "password"}
                   {...register("password", {
                     required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
                   })}
                   className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                  placeholder="Enter your password"
+                  placeholder="Create a password"
                 />
                 <button
                   type="button"
@@ -104,28 +124,47 @@ const Login: React.FC = () => {
                 </button>
               </div>
               {errors.password && (
-                <p className="text-red-600 text-sm mt-1">
+                <p className="text-red-600 text-sm">
                   {errors.password.message}
                 </p>
               )}
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
                 <input
-                  type="checkbox"
-                  {...register("rememberMe")}
-                  className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                  type={showConfirmPassword ? "text" : "password"}
+                  {...register("confirmPassword", {
+                    required: "Please confirm your password",
+                    validate: (value) =>
+                      value === password || "Passwords do not match",
+                  })}
+                  className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="Confirm your password"
                 />
-                <label className="ml-2 block text-sm text-gray-700">
-                  Remember me
-                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400" />
+                  )}
+                </button>
               </div>
-              <div className="text-sm">
-                <a href="#" className="text-red-600 hover:text-red-500">
-                  Forgot your password?
-                </a>
-              </div>
+              {errors.confirmPassword && (
+                <p className="text-red-600 text-sm">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
             </div>
 
             <button
@@ -155,25 +194,19 @@ const Login: React.FC = () => {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Signing in...
+                  Creating account...
                 </span>
               ) : (
-                "Sign in"
+                "Create Account"
               )}
             </button>
-            <div className="text-center text-sm">
-              <span className="text-gray-600">Don't have an account? </span>
-              <Link to="/signup" className="text-red-600 hover:text-red-500">
-                Sign up
-              </Link>
-            </div>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-600">
-            Need help? Contact{" "}
-            <a href="#" className="text-red-600 hover:text-red-500">
-              support
-            </a>
+          <div className="text-center text-sm">
+            <span className="text-gray-600">Already have an account? </span>
+            <Link to="/login" className="text-red-600 hover:text-red-500">
+              Sign in
+            </Link>
           </div>
         </div>
       </div>
@@ -181,4 +214,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Signup;
