@@ -23,9 +23,11 @@ export const login = createAsyncThunk<
   { rejectValue: string }
 >("auth/login", async (credentials, { rejectWithValue }) => {
   try {
+    console.log("About to login");
     const response = await api.get<User[]>(
       `/users?username=${credentials.username}&password=${credentials.password}`
     );
+    console.log("Response", response);
     if (response.data.length > 0) {
       const user = response.data[0];
       const token = "temp";
